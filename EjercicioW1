@@ -1,0 +1,108 @@
+clear all
+close all
+clc
+
+VelC = []
+AcelC = []
+VelAng = []
+ 
+AcelAng = [0;0;0]
+VelAng2 = [0;6;0]
+AcelAng2 = [0;0;0]
+rOA=[0;0.3;0]
+rCAp=[0;0;-6]
+rCAdp=[0;0;-3]
+for j=1:1:5
+    VelAng = [0;0;j-1]
+    VecVelAng = norm(VelAng)
+    for i=1:1:10
+        rCA= [0;0;(-i/10)*0.3]
+        VrCA(i)= norm(rCA)
+        VelA = cross(VelAng,rOA)
+        AcelA = cross(AcelAng,rOA) + cross(VelAng,cross(VelAng,rOA))
+        VelCA = (rCAp + cross(VelAng2,rCA))
+        VelCAr(i,j) = norm(VelCA)
+        AcelCA = (rCAdp + cross(VelAng2,rCAp)) + cross(AcelAng2,rCA)+ cross(VelAng2,VelCA)
+        AcelCAr(i,j) = norm(AcelCA)
+        VelC(i,j) = norm(VelA + cross(VelAng,rCA) + VelCA)
+        AcelC(i,j) = norm(AcelA + cross(AcelAng,rCA) + cross(VelAng,cross(VelAng,rCA)) + cross(2*VelAng,VelCA) + AcelCA)
+        AcelCor(i,j) = norm(cross((2*VelAng),VelCA))
+        porc(i,j) = ((AcelCor(i,j)*100)/AcelC(i,j))
+    end
+end
+
+%Grafica velocidad en el collar vs Posición inicial
+figure(1)
+plot(VrCA,VelC);
+plot(VrCA,VelC(:,1),'y');
+hold on
+plot(VrCA,VelC(:,2),'m');
+hold on
+plot(VrCA,VelC(:,3),'c');
+hold on
+plot(VrCA,VelC(:,4),'r');
+hold on
+plot(VrCA,VelC(:,5),'g');
+hold on
+xlabel('Posición [m]')
+ylabel('Velocidad en C [m/s]')
+legend('w1=0 [rad/s]','w1=1 [rad/s]','w1=2 [rad/s]', 'w1=3 [rad/s]','w1=4 [rad/s]')
+title('Velocidad en el collar vs Posición inicial');
+grid on
+
+%Grafica aceleración en el collar vs Posición inicial
+figure(2)
+plot(VrCA,AcelC);
+plot(VrCA,AcelC(:,1),'y');
+hold on
+plot(VrCA,AcelC(:,2),'m');
+hold on
+plot(VrCA,AcelC(:,3),'c');
+hold on
+plot(VrCA,AcelC(:,4),'r');
+hold on
+plot(VrCA,AcelC(:,5),'g');
+hold on
+xlabel('Posición [m]')
+ylabel('Aceleración en C [m/s^2]')
+legend('w1=0 [rad/s]','w1=1 [rad/s]','w1=2 [rad/s]', 'w1=3 [rad/s]','w1=4 [rad/s]')
+title('Aceleración en el collar vs Posición inicial');
+grid on
+
+%Grafica aceleración coriolis vs Posición inicial
+figure(3)
+plot(VrCA,AcelCor);
+plot(VrCA,AcelCor(:,1),'y');
+hold on
+plot(VrCA,AcelCor(:,2),'m');
+hold on
+plot(VrCA,AcelCor(:,3),'c');
+hold on
+plot(VrCA,AcelCor(:,4),'r');
+hold on
+plot(VrCA,AcelCor(:,5),'g');
+hold on
+xlabel('Posición [m]')
+ylabel('Aceleración coriolis [m/s^2]')
+legend('w1=0 [rad/s]','w1=1 [rad/s]','w1=2 [rad/s]', 'w1=3 [rad/s]','w1=4 [rad/s]')
+title('Aceleración coriolis vs Posición inicial');
+grid on
+
+%Grafica Porcentaje aceleración coriolis vs Posición inicial
+figure(4)
+plot(VrCA,porc);
+plot(VrCA,porc(:,1),'y');
+hold on
+plot(VrCA,porc(:,2),'m');
+hold on
+plot(VrCA,porc(:,3),'c');
+hold on
+plot(VrCA,porc(:,4),'r');
+hold on
+plot(VrCA,porc(:,5),'g');
+hold on
+xlabel('Posición [m]')
+ylabel('Porcentaje aceleración coriolis [m/s^2]')
+legend('w1=0 [rad/s]','w1=1 [rad/s]','w1=2 [rad/s]', 'w1=3 [rad/s]','w1=4 [rad/s]')
+title('Porcentaje aceleración coriolis vs Posición inicial');
+grid on
